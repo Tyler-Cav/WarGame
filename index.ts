@@ -39,7 +39,9 @@ function buildDeck() {
     }
     return cards;
 }
+
 let standardCardDeck: Card[] = buildDeck();
+
 function splitCardDeck() {
     let deckSize = 52
     for (let i = 0; i < 52; i++) {
@@ -57,21 +59,22 @@ function splitCardDeck() {
         }
         deckSize--;
     }
+    console.log("PlayerOneHand");
+    console.log(playerOneHand);
+    console.log("PlayerTwoHand")
+    console.log(playerTwoHand);
 }
-splitCardDeck();
-console.log("PlayerOneHand");
-console.log(playerOneHand);
-console.log("PlayerTwoHand")
-console.log(playerTwoHand);
 
 function shuffleCards() {
     let counter = 0;
+    console.log('')
+    console.log('Shuffling Cards');
     for (let i = 0; i < 3; i++) {
         setTimeout(() => {
             console.log('.');
             counter++;
             if (counter === 3) {
-                console.log('Shuffling Cards');
+                splitCardDeck();
             }
         }, i * 1000);
     }
