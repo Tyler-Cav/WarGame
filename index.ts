@@ -13,9 +13,9 @@ interface Card {
 }
 
 let playerOneHand: Card[] = [];
-let playerOneDiscard: Card[] = [];
+let playerOneDiscardPile: Card[] = [];
 let playerTwoHand: Card[] = [];
-let playerTwoDiscard: Card[] = [];
+let playerTwoDiscardPile: Card[] = [];
 
 function buildDeck() {
     const cards: Card[] = [];
