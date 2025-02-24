@@ -77,9 +77,69 @@ function shuffleCards() {
             counter++;
             if (counter === 3) {
                 splitCardDeck();
+                fight()
             }
         }, i * 1000);
     }
+}
+
+function playerShouldShuffleCheck() {
+    if (playerOneHand.length === 0) {
+        let discardSize = playerOneDiscardPile.length
+        for (let i = 0; i < discardSize; i++) {
+            let randomSelection: number = Math.floor(Math.random() * discardSize);
+                playerOneHand.push(playerOneDiscardPile[randomSelection]);
+                playerOneDiscardPile = playerOneDiscardPile.filter(function( obj ) {
+                    return !(obj.name === playerOneDiscardPile[randomSelection].name && obj.suit === playerOneDiscardPile[randomSelection].suit);
+                  });
+                discardSize--
+        }
+    } else if (playerTwoHand.length === 0) {
+        let discardSize = playerTwoDiscardPile.length
+        for (let i = 0; i < discardSize; i++) {
+            let randomSelection: number = Math.floor(Math.random() * discardSize);
+                playerTwoHand.push(playerTwoDiscardPile[randomSelection]);
+                playerTwoDiscardPile = playerTwoDiscardPile.filter(function( obj ) {
+                    return !(obj.name === playerTwoDiscardPile[randomSelection].name && obj.suit === playerTwoDiscardPile[randomSelection].suit);
+                  });
+                discardSize--
+        }
+    }
+}
+
+function winnerCheck() {
+    if (playerOneHand.length === 0 && playerOneDiscardPile.length === 0) {
+        console.log("Player 2 Wins!")
+        return true
+    } else if (playerTwoHand.length === 0 && playerTwoDiscardPile.length === 0) {
+        console.log("Player One Wins!")
+        return true
+    }
+    return false
+}
+
+function fight() {
+    if (winnerCheck()) {
+        return "End of Game"
+    } else {
+        playerShouldShuffleCheck()
+    }
+    let playerOnePlayedCard: Card | undefined = playerOneHand.pop();
+    let playerTwoPlayedCard: Card | undefined = playerTwoHand.pop();
+    if (playerOnePlayedCard !== undefined && playerTwoPlayedCard !== undefined) {
+        //NEED TO FIGURE OUT HOW TO KNOW WHEN IT'S A FACE CARD
+        if (playerOnePlayedCard.value > playerTwoPlayedCard.value) {
+            playerOneDiscardPile.push(playerOnePlayedCard)
+            playerTwoDiscardPile.push(playerTwoPlayedCard)
+        } else if (playerOnePlayedCard.value < playerTwoPlayedCard.value) {
+            playerTwoDiscardPile.push(playerOnePlayedCard)
+            playerTwoDiscardPile.push(playerTwoPlayedCard)
+        } else {
+            // Need to array pop 4 total cards per player (and store 3 for each)
+            // Need something to store the 3 cards drawn for each player when it's a tie
+            // Also need logic if the player only has 3 or less cards and must play before all three
+        }
+    }   
 }
 
 program.command('start-game')
