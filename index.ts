@@ -66,12 +66,7 @@ function splitCardDeck() {
         }
         deckSize--;
     }
-    console.log("PLAYER ONE PLAYED CARD")
-    console.log(playerOneHand[0].asciiText)
-    console.log(playerOneHand.length)
-    console.log("PLAYER TWO PLAYED CARD")
-    console.log(playerTwoHand[0].asciiText)
-    console.log(playerTwoHand.length)
+
 }
 
 function shuffleCards() {
@@ -85,6 +80,7 @@ function shuffleCards() {
             if (counter === 3) {
                 splitCardDeck();
                 fight()
+                console.log(playerOneHand)
             }
         }, i * 1000);
     }
@@ -131,17 +127,31 @@ function fight() {
     } else {
         playerShouldShuffleCheck()
     }
-    
+
     let playerOnePlayedCard: Card | undefined = playerOneHand.pop();
     let playerTwoPlayedCard: Card | undefined = playerTwoHand.pop();
 
     if (playerOnePlayedCard !== undefined && playerTwoPlayedCard !== undefined) {
         if (playerOnePlayedCard.value > playerTwoPlayedCard.value) {
+            console.log("PLAYER ONE PLAYED CARD")
+            console.log(playerOnePlayedCard.asciiText)
+            console.log("PLAYER TWO PLAYED CARD")
+            console.log(playerTwoPlayedCard.asciiText)
+            console.log("Player One Wins Round")
             playerOneDiscardPile.push(playerOnePlayedCard)
-            playerTwoDiscardPile.push(playerTwoPlayedCard)
+            playerOneDiscardPile.push(playerTwoPlayedCard)
+            console.log(`Player One has ${playerOneHand.length + playerOneDiscardPile.length} cards left`)
+            console.log(`Player Two has ${playerTwoHand.length + playerTwoDiscardPile.length} cards left`)
         } else if (playerOnePlayedCard.value < playerTwoPlayedCard.value) {
+            console.log("PLAYER ONE PLAYED CARD")
+            console.log(playerOnePlayedCard.asciiText)
+            console.log("PLAYER TWO PLAYED CARD")
+            console.log(playerTwoPlayedCard.asciiText)
+            console.log("Player Two Wins Round")
             playerTwoDiscardPile.push(playerOnePlayedCard)
             playerTwoDiscardPile.push(playerTwoPlayedCard)
+            console.log(`Player One has ${playerOneHand.length + playerOneDiscardPile.length} cards left`)
+            console.log(`Player Two has ${playerTwoHand.length + playerTwoDiscardPile.length} cards left`)
         } else {
             //THIS IS TOO MESSY, NEED TO MAKE A SEPARATE FUNCTION FOR TIED LOGIC
             let tempCardStorage: Card[] = []
