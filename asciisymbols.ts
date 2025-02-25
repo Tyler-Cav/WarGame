@@ -198,16 +198,16 @@ let clubs = `
  \\______/ |__/             \\______/ |__/ \\______/ |_______/ |_______/                                     
 `                                                  
 
-let asciiObject: string[] = []
+let asciiArray: string[] = []
 let asciiCardValues = [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]                                                                  
-let asciiSuits: string[] = [ofHearts, diamonds, spades, clubs]
+let asciiSuits: string[] = [ofHearts, diamonds, clubs, spades]
 
 let suit: string
 
 for (suit of asciiSuits) {
     for (let i = 0; i < asciiCardValues.length; i++) {
-        asciiObject.push(`${asciiCardValues[i] + suit}`)
+        asciiArray.push(`${asciiCardValues[i] + suit}`)
     }
 }
 
-console.log(asciiObject[0])
+export default asciiArray;

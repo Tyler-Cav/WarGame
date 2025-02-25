@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import asciiArray from './asciisymbols.js';
 const program = new Command();
 
 program
@@ -10,6 +11,7 @@ interface Card {
     suit: string;
     value: number;
     name: string;
+    asciiText: string;
 }
 
 let playerOneHand: Card[] = [];
@@ -18,6 +20,7 @@ let playerTwoHand: Card[] = [];
 let playerTwoDiscardPile: Card[] = [];
 
 function buildDeck() {
+    let asciiTextCounter: number = 0
     const cards: Card[] = [];
     const suits: string[] = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
     for (const suit of suits) {
@@ -34,9 +37,11 @@ function buildDeck() {
             }
             cards.push({
                 suit,
-                value: (i === 11 || i === 12 || i === 13) ? 10 : i,
+                value: i,
                 name,
+                asciiText: asciiArray[asciiTextCounter]
             });
+            asciiTextCounter++
         }
     }
     return cards;
@@ -61,10 +66,12 @@ function splitCardDeck() {
         }
         deckSize--;
     }
-    console.log("PlayerOneHand");
-    console.log(playerOneHand);
-    console.log("PlayerTwoHand")
-    console.log(playerTwoHand);
+    console.log("PLAYER ONE PLAYED CARD")
+    console.log(playerOneHand[0].asciiText)
+    console.log(playerOneHand.length)
+    console.log("PLAYER TWO PLAYED CARD")
+    console.log(playerTwoHand[0].asciiText)
+    console.log(playerTwoHand.length)
 }
 
 function shuffleCards() {
@@ -83,8 +90,8 @@ function shuffleCards() {
     }
 }
 
-function playerShouldShuffleCheck() {
-    if (playerOneHand.length === 0) {
+function playerShouldShuffleCheck(playerOneTieLessThanFour: boolean = false, playerTwoTieLessThanFour: boolean = false) {
+    if (playerOneHand.length === 0 || playerOneTieLessThanFour) {
         let discardSize = playerOneDiscardPile.length
         for (let i = 0; i < discardSize; i++) {
             let randomSelection: number = Math.floor(Math.random() * discardSize);
@@ -94,7 +101,7 @@ function playerShouldShuffleCheck() {
                   });
                 discardSize--
         }
-    } else if (playerTwoHand.length === 0) {
+    } else if (playerTwoHand.length === 0 || playerTwoTieLessThanFour) {
         let discardSize = playerTwoDiscardPile.length
         for (let i = 0; i < discardSize; i++) {
             let randomSelection: number = Math.floor(Math.random() * discardSize);
@@ -124,10 +131,11 @@ function fight() {
     } else {
         playerShouldShuffleCheck()
     }
+    
     let playerOnePlayedCard: Card | undefined = playerOneHand.pop();
     let playerTwoPlayedCard: Card | undefined = playerTwoHand.pop();
+
     if (playerOnePlayedCard !== undefined && playerTwoPlayedCard !== undefined) {
-        //NEED TO FIGURE OUT HOW TO KNOW WHEN IT'S A FACE CARD
         if (playerOnePlayedCard.value > playerTwoPlayedCard.value) {
             playerOneDiscardPile.push(playerOnePlayedCard)
             playerTwoDiscardPile.push(playerTwoPlayedCard)
@@ -135,6 +143,21 @@ function fight() {
             playerTwoDiscardPile.push(playerOnePlayedCard)
             playerTwoDiscardPile.push(playerTwoPlayedCard)
         } else {
+            //THIS IS TOO MESSY, NEED TO MAKE A SEPARATE FUNCTION FOR TIED LOGIC
+            let tempCardStorage: Card[] = []
+            if (playerOneHand.length >= 4 && playerTwoHand.length >= 4) {
+                for (let i: number = 0; i < 4; i++) {
+                    let playerOneAdditionalPlayedCards = playerOneHand.pop()
+                    let playerTwoAdditionalPlayedCards = playerTwoHand.pop()
+                    tempCardStorage.push(playerOneAdditionalPlayedCards)
+                    tempCardStorage.push(playerTwoAdditionalPlayedCards)
+                }
+                if (playerOnePlayedCard.value > playerTwoPlayedCard.value) {
+                    // Need to push both cards to PlayerOne plus tempCardStorage cards
+                } else if (playerOnePlayedCard.value < playerTwoPlayedCard.value) {
+                    // Need to push both cards to PlayerTwo plus tempCardStorage cards
+                }
+            }
             // Need to array pop 4 total cards per player (and store 3 for each)
             // Need something to store the 3 cards drawn for each player when it's a tie
             // Also need logic if the player only has 3 or less cards and must play before all three
