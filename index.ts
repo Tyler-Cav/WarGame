@@ -80,7 +80,6 @@ function shuffleCards() {
             if (counter === 3) {
                 splitCardDeck();
                 fight()
-                console.log(playerOneHand)
             }
         }, i * 1000);
     }
